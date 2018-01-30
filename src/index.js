@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import '/index.css';
 import './index.css';
 
 function Square(props) {
@@ -9,6 +8,31 @@ function Square(props) {
         {props.value}
       </button>
     );
+}
+
+function findGrid(i) {
+  let x = 0;
+  let y = 0;
+
+  const j = i;
+
+  if (j === 0 || j === 1 || j === 2) {
+    y = 1;
+  } else if (j === 3 || j === 4 || j === 5) {
+    y = 2;
+  } else {
+    y = 3;
+  }
+
+  if (i === 0 || i === 3 || i === 6) {
+    x = 1;
+  } else if (i === 1 || i === 4 || i === 7) {
+    x = 2;
+  } else {
+    x = 3;
+  }
+
+  return y + " by " + x;
 }
 
 class Board extends React.Component {
@@ -66,19 +90,24 @@ class Game extends React.Component {
       return;
     }
 
+    let gridCrd = findGrid(i);
+
     squares[i] = this.state.xIsNext ? 'X': 'O';
     this.setState({
       history: history.concat([{
         squares: squares,
       }]),
       stepNumber: history.length,
+      squareNumb: i,
+      gridCord: gridCrd,
       xIsNext: !this.state.xIsNext,
     });
   }
 
-  jumpTo(step) {
+  jumpTo(step, i) {
     this.setState({
       stepNumber: step,
+      squareNumb: i,
       xIsNext: (step % 2) === 0,
     });
   }
@@ -87,14 +116,17 @@ class Game extends React.Component {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
+    const gridCord = this.state.gridCord;
 
     const moves = history.map((step, move) => {
+      let grid = findGrid(this.state.squareNumb);
+
       const desc = move ?
-        'Go to move #' + move :
+        'Go to move ' + grid + " move " + move + " gridCord " + gridCord:
         'Go to game start';
         return (
           <li key = {move}>
-            <button onClick = {() => this.jumpTo(move)} > {desc} </button>
+            <button onClick = {() => this.jumpTo(move, this.state.squareNumb)} > {desc} </button>
           </li>
         );
     });
@@ -107,18 +139,21 @@ class Game extends React.Component {
     }
 
     return (
-      <div className = "game">
-        <div className = "game-info">
-          <div>{status}</div>
-          <ol>{}</ol>
+      <div className = "header">
+        <h1>XnO Game by {fullName(name)}</h1>
+        <div className = "game">
+          <div className = "game-info">
+            <div>{status}</div>
+            <ol>{}</ol>
+          </div>
+          <div className = "game-board">
+            <Board
+              squares = {current.squares}
+              onClick = {(i) => this.handleClick(i)}
+            />
+          </div>
+          <ol> {moves} </ol>
         </div>
-        <div className = "game-board">
-          <Board
-            squares = {current.squares}
-            onClick = {(i) => this.handleClick(i)}
-          />
-        </div>
-        <ol> {moves} </ol>
       </div>
     );
   }
@@ -146,6 +181,21 @@ function calculateWinner(squares) {
 
   return null;
 }
+
+function fullName(names){
+  if (names) {
+    return names.firstName + " " + names.middleName.charAt(0) + " " + names.surName;
+  }
+  return "Stranger";
+}
+
+const name = {
+  firstName: "Martin",
+  middleName: "Kiprotich",
+  surName: "Ruto"
+}
+
+// const title = response.potentiallyMaliciousInput;
 
 ReactDOM.render (
   <Game />,
