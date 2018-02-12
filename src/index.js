@@ -141,6 +141,7 @@ class Game extends React.Component {
     return (
       <div className = "header">
         <h1>XnO Game by {fullName(name)}</h1>
+        <h2>It is {tick()}.</h2>
         <div className = "game">
           <div className = "game-info">
             <div>{status}</div>
@@ -156,7 +157,13 @@ class Game extends React.Component {
         </div>
       </div>
     );
+
+    done();
   }
+}
+
+function tick(){
+  return new Date().toLocaleTimeString();
 }
 
 function calculateWinner(squares) {
@@ -189,15 +196,19 @@ function fullName(names){
   return "Stranger";
 }
 
+
+// const title = response.potentiallyMaliciousInput;
+
 const name = {
   firstName: "Martin",
   middleName: "Kiprotich",
   surName: "Ruto"
 }
 
-// const title = response.potentiallyMaliciousInput;
-
-ReactDOM.render (
-  <Game />,
-  document.getElementById('root')
-);
+function done(){
+    ReactDOM.render (
+    <Game />,
+    document.getElementById('root')
+  );
+}
+setInterval(done, 1000);
