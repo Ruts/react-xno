@@ -10,30 +10,7 @@ function Square(props) {
     );
 }
 
-function findGrid(i) {
-  let x = 0;
-  let y = 0;
 
-  const j = i;
-
-  if (j === 0 || j === 1 || j === 2) {
-    y = 1;
-  } else if (j === 3 || j === 4 || j === 5) {
-    y = 2;
-  } else {
-    y = 3;
-  }
-
-  if (i === 0 || i === 3 || i === 6) {
-    x = 1;
-  } else if (i === 1 || i === 4 || i === 7) {
-    x = 2;
-  } else {
-    x = 3;
-  }
-
-  return y + " by " + x;
-}
 
 class Board extends React.Component {
   renderSquare(i) {
@@ -81,6 +58,31 @@ class Game extends React.Component {
     };
   }
 
+  findGrid(i) {
+    let x = 0;
+    let y = 0;
+
+    const j = i;
+
+    if (j === 0 || j === 1 || j === 2) {
+      y = 1;
+    } else if (j === 3 || j === 4 || j === 5) {
+      y = 2;
+    } else {
+      y = 3;
+    }
+
+    if (i === 0 || i === 3 || i === 6) {
+      x = 1;
+    } else if (i === 1 || i === 4 || i === 7) {
+      x = 2;
+    } else {
+      x = 3;
+    }
+
+    return y + " by " + x;
+  }
+
   handleClick(i) {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
@@ -90,7 +92,7 @@ class Game extends React.Component {
       return;
     }
 
-    let gridCrd = findGrid(i);
+    // let gridCrd = ;
 
     squares[i] = this.state.xIsNext ? 'X': 'O';
     this.setState({
@@ -99,7 +101,7 @@ class Game extends React.Component {
       }]),
       stepNumber: history.length,
       squareNumb: i,
-      gridCord: gridCrd,
+      gridCord: this.findGrid(i),
       xIsNext: !this.state.xIsNext,
     });
   }
@@ -108,6 +110,7 @@ class Game extends React.Component {
     this.setState({
       stepNumber: step,
       squareNumb: i,
+      grid: this.findGrid(step),
       xIsNext: (step % 2) === 0,
     });
   }
@@ -117,9 +120,10 @@ class Game extends React.Component {
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
     const gridCord = this.state.gridCord;
+    const grid = this.state.grid;
 
     const moves = history.map((step, move) => {
-      let grid = findGrid(this.state.squareNumb);
+      // this.setState(grid: findGrid(this.state.squareNumb));
 
       const desc = move ?
         'Go to move ' + grid + " move " + move + " gridCord " + gridCord:
@@ -205,10 +209,59 @@ const name = {
   surName: "Ruto"
 }
 
+// function Clock(props){
+//   return(
+//     <div>
+//       <h2>Time is also {props.date.toLocaleTimeString()}.</h2>
+//     </div>
+//   );
+// }
+
+class Clock extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {date: new Date()};
+  }
+
+  componentDidMount() {
+    this.timerID = setInterval ( () => this.tick(), 1000 );
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID)
+  }
+
+  tick() {
+    this.setState({
+      date: new Date()
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <h2>Time is also {this.state.date.toLocaleTimeString()}.</h2>
+      </div>
+    );
+  }
+}
+
+function App() {
+  return (
+    <div>
+      <Clock />
+      <Clock />
+      <Clock />
+    </div>
+  );
+}
+
 function done(){
     ReactDOM.render (
-    <Game />,
+    <App />,
+    // <Game />,
     document.getElementById('root')
   );
 }
+
 setInterval(done, 1000);
