@@ -209,18 +209,21 @@ const name = {
   surName: "Ruto"
 }
 
-// function Clock(props){
-//   return(
-//     <div>
-//       <h2>Time is also {props.date.toLocaleTimeString()}.</h2>
-//     </div>
-//   );
-// }
+function OldClock(props){
+  return(
+    <div>
+      <h2>Time is also {props.date.toLocaleTimeString()}.</h2>
+    </div>
+  );
+}
 
 class Clock extends React.Component {
   constructor(props){
     super(props);
-    this.state = {date: new Date()};
+    this.state = {date: new Date(),
+                  isToggleOn: true};
+
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
@@ -232,15 +235,26 @@ class Clock extends React.Component {
   }
 
   tick() {
-    this.setState({
-      date: new Date()
-    });
+    if (this.state.isToggleOn){
+      this.setState({
+        date: new Date()
+      });
+    }
+  }
+
+  handleClick() {
+    this.setState(prevState => ({
+      isToggleOn: !prevState.isToggleOn
+    }));
   }
 
   render() {
     return (
       <div>
         <h2>Time is also {this.state.date.toLocaleTimeString()}.</h2>
+        <button onClick={this.handleClick}>
+          {this.state.isToggleOn ? 'Freeze' : 'Continue'}
+        </button>
       </div>
     );
   }
@@ -252,6 +266,7 @@ function App() {
       <Clock />
       <Clock />
       <Clock />
+      <Game />
     </div>
   );
 }
@@ -259,7 +274,6 @@ function App() {
 function done(){
     ReactDOM.render (
     <App />,
-    // <Game />,
     document.getElementById('root')
   );
 }
