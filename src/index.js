@@ -271,11 +271,34 @@ function App() {
   );
 }
 
-function LoginButton(props) {
+function ListItems(props) {
   return(
-    <button onClick = {props.onClick}>
-      Login
-    </button>
+    <li>{props.id} Squared = {props.value * props.value}</li>
+  );
+}
+
+function LoginButton(props) {
+  const numbers = [1,2,3,4,5];
+  const listItems = numbers.map((number) =>
+    <ListItems key = {number.toString()}
+                id = {number.toString()}
+                value = {number} />
+  );
+
+  return(
+    <div>
+      <button onClick = {props.onClick}>
+        Login
+      </button>
+      <ul>{listItems}</ul>
+      <ul>
+        {numbers.map((number) =>
+          <ListItems key = {number.toString()}
+                      id = {number.toString()}
+                      value = {number} />
+        )}
+      </ul>
+    </div>
   );
 }
 
