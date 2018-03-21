@@ -271,9 +271,61 @@ function App() {
   );
 }
 
+function LoginButton(props) {
+  return(
+    <button onClick = {props.onClick}>
+      Login
+    </button>
+  );
+}
+
+function LogoutButton(props) {
+  return(
+    <div>
+      <button onClick = {props.onClick}>
+        Logout
+      </button>
+      <App />
+    </div>
+  );
+}
+
+class LoginControl extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleLoginClick = this.handleLoginClick.bind(this);
+    this.handleLogoutClick = this.handleLogoutClick.bind(this);
+    this.state = {isLoggedIn: false};
+    }
+
+    handleLoginClick() {
+      this.setState({isLoggedIn: true});
+    }
+
+    handleLogoutClick() {
+      this.setState({isLoggedIn: false});
+    }
+
+    render() {
+      const isLoggedIn = this.state.isLoggedIn;
+
+      const button = isLoggedIn ? (
+        <LogoutButton onClick = {this.handleLogoutClick} />
+      ) : (
+        <LoginButton onClick = {this.handleLoginClick} />
+      );
+
+      return (
+        <div>
+          {button}
+        </div>
+      )
+    }
+}
+
 function done(){
     ReactDOM.render (
-    <App />,
+    <LoginControl />,
     document.getElementById('root')
   );
 }
