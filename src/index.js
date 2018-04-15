@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import _ from 'lodash'
 
 function Square(props) {
     return (
@@ -185,7 +186,7 @@ function calculateWinner(squares) {
   for(let i = 0; i < lines.length; i++){
     const [a,b,c] = lines[i];
 
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]){
+    if (squares[a] && _.isEqual(squares[a], squares[b]) && _.isEqual(squares[a], squares[c])){
       return squares[a];
     }
   }
@@ -194,10 +195,12 @@ function calculateWinner(squares) {
 }
 
 function fullName(names){
-  if (names) {
-    return names.firstName + " " + names.middleName.charAt(0) + " " + names.surName;
+  if (_.isEmpty(names)){
+    return "stranger";
   }
-  return "Stranger";
+
+  return `${names.firstName} .${names.middleName.charAt(0)} ${names.surName}`;
+
 }
 
 
@@ -291,6 +294,8 @@ function LoginButton(props) {
         Login
       </button>
       <ul>{listItems}</ul>
+
+      Bellow is the Inline Implementation
       <ul>
         {numbers.map((number) =>
           <ListItems key = {number.toString()}
